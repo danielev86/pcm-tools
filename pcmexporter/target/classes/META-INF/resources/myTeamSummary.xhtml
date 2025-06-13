@@ -1,0 +1,56 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="template/commontemplate.xhtml">
+    <ui:define name="body_content">
+        <div class="ui-g">
+            <div class="ui-g-4">
+                <p:outputLabel for="usernameTxtId" value="Username:"/>
+            </div>
+            <div class="ui-g-8">
+                <h:outputText id="usernameTxtId" value="#{teamSummaryController.userData.userData}" styleClass="form-control-plaintext"/>
+            </div>
+        </div>
+        <div class="ui-g">
+            <div class="ui-g-4">
+                <p:outputLabel for="teamNameTxtId" value="Team name:"/>
+            </div>
+            <div class="ui-g-8">
+                <h:outputText id="teamNameTxtId" value="#{teamSummaryController.userData.team.name}" styleClass="form-control-plaintext text-uppercase"/>
+            </div>
+        </div>
+        <ui:fragment rendered="#{not empty teamSummaryController.userData.gamCarrerData}">
+            <ui:repeat value="#{teamSummaryController.userData.gamCarrerData}" var="item">
+                <div class="ui-g">
+                    <div class="ui-g-4">
+                        <p:outputLabel value="#{item.parameterCode}"/>
+                    </div>
+                    <div class="ui-g-8">
+                        <ui:fragment rendered="#{item.parameterCode eq 'SOLDE' or item.parameterCode eq 'DOTATION'}">
+                            <p:inputNumber  value="#{item.parameterValue}" readonly="true"  modifyValueOnWheel="false"/>
+                        </ui:fragment>
+                        <ui:fragment rendered="#{item.parameterCode ne 'SOLDE' and item.parameterCode ne 'DOTATION'}">
+                            <p:inputNumber  value="#{item.parameterValue}" readonly="true" modifyValueOnWheel="false" decimalPlaces="0"/>
+                        </ui:fragment>
+                    </div>
+                </div>
+            </ui:repeat>
+        </ui:fragment>
+        <p:accordionPanel id="cyclistSummaryPanelId" activeIndex="-1">
+            <p:tab title="Cyclist summary">
+                <ui:include src="template/commonCyclistTable.xhtml">
+                    <ui:param name="cyclists" value="#{teamSummaryController.team.cyclists}"/>
+                    <ui:param name="enableEdit" value="false"/>
+                </ui:include>
+            </p:tab>
+            <p:tab title="Scout summary">
+                <ui:include src="template/commonScoutTable.xhtml">
+                    <ui:param name="scouts" value="#{teamSummaryController.team.scout}"/>
+                    <ui:param name="enableEdit" value="false"/>
+                </ui:include>
+            </p:tab>
+        </p:accordionPanel>
+    </ui:define>
+</ui:composition>

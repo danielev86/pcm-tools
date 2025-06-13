@@ -1,0 +1,30 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:param name="scouts" value="#{scouts}"/>
+    <ui:param name="controller" value="#{controller}"/>
+    <ui:param name="editEnable" value="#{editEnable}"/>
+    <p:dataTable id="scoutSummaryId"
+                 styleClass="table table-data table-bordered"
+                 value="#{scouts}"
+                 var="scout" scrollable="true" scrollWidth="100%">
+        <p:column headerText="First name">
+            #{scout.firstName}
+        </p:column>
+        <p:column headerText="Last name">
+            #{scout.lastName}
+        </p:column>
+        <p:column headerText="Wage">
+            <h:outputText value="#{scout.wage}">
+                <f:convertNumber maxFractionDigits="2" minFractionDigits="2"/>
+            </h:outputText>
+        </p:column>
+        <p:column headerText="Contract finish">
+            <h:outputText value="#{scout.contractEnd}">
+                <f:convertNumber maxFractionDigits="0" minFractionDigits="0" groupingUsed="false"/>
+            </h:outputText>
+        </p:column>
+    </p:dataTable>
+</ui:composition>

@@ -1,0 +1,92 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>PCM Save game editor</title>
+    <link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css"  rel="stylesheet"/>
+</h:head>
+
+<h:outputStylesheet>
+
+    .backgourdPanel {
+        background-color: #1f2d40;
+    }
+
+    body .ui-widget {
+        color: #FFFFFF;
+    }
+
+    body  {
+        height: 100%;
+    }
+
+    .centeredMenuBar.ui-menubar {
+        text-align: center;
+    }
+
+    .centeredMenuBar .ui-menu-list {
+        display: inline-block;
+        width: 100%;
+    }
+
+    body .ui-menu .ui-menu-list .ui-menuitem {
+        margin: 0;
+        width: 100%;
+        border: 0 none;
+        float: none;
+        border-radius: 0;
+        transition: background-color .2s, color .2s, border-color .2s, box-shadow .2s, opacity .2s;
+        font-size: 30px !important;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .subMenuStyle{
+        font-size: 20px !important;
+    }
+
+</h:outputStylesheet>
+
+<h:body styleClass="backgourdPanel">
+    <div class="card">
+        <p:outputPanel>
+
+            <div class="ui-g" style="padding-bottom: 20px;">
+                <div class="ui-g-12">
+                    <div style="text-align: center">
+                        <img src="static/logo.png"/>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <!--teamSummaryController MENU-->
+                    <p:menubar styleClass="centeredMenuBar">
+                        <p:menuitem value="#{msg['pcmmenu.submenu.home']}"  url="/home.xhtml"/>
+                        <p:submenu label="#{msg['pcmmenu.submenu.myteam']}">
+                            <p:menuitem value="#{msg['pcmmenu.submenu.myteam.summary']}"  url="/myTeamSummary.xhtml" styleClass="subMenuStyle"/>
+                        </p:submenu>
+                        <p:submenu label="#{msg['pcmmenu.submenu.cyclists']}">
+
+                        </p:submenu>
+                        <p:submenu label="#{msg['pcmmenu.submenu.team']}">
+
+                        </p:submenu>
+                        <p:submenu label="#{msg['pcmmenu.submenu.cheat']}">
+
+                        </p:submenu>
+                    </p:menubar>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <ui:insert name="body_content"/>
+                </div>
+            </div>
+        </p:outputPanel>
+    </div>
+</h:body>
+</html>

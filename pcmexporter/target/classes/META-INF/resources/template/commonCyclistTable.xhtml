@@ -1,0 +1,100 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:param name="cyclists" value="#{cyclists}"/>
+    <ui:param name="controller" value="#{controller}"/>
+    <ui:param name="editEnable" value="#{editEnable}"/>
+    <p:dataTable id="cyclistSummaryTableId"
+                 styleClass="table table-data table-bordered"
+                 value="#{cyclists}"
+                 var="cyclist" scrollable="true" scrollWidth="100%">
+        <p:column rendered="#{editEnable eq true}">
+            Capito
+        </p:column>
+        <p:column headerText="First name" styleClass="col-md-2">
+            #{cyclist.firstName}
+        </p:column>
+        <p:column headerText="Last name" styleClass="col-md-2">
+            #{cyclist.lastName}
+        </p:column>
+        <p:column headerText="Birthdate" styleClass="col-md-2">
+            <h:outputText value="#{pcmFormatterController.formatDate(cyclist.birthdate)}">
+                <f:convertDateTime pattern="dd/MM/yyyy"/>
+            </h:outputText>
+        </p:column>
+        <p:column headerText="Plain character" styleClass="col-md-1">
+            <h:outputText value="#{cyclist.characPlain}" style="text-align: center">
+                <f:convertNumber minFractionDigits="0" maxFractionDigits="0"/>
+            </h:outputText>
+        </p:column>
+        <p:column headerText="Mountain character" styleClass="col-md-1">
+            <h:outputText value="#{cyclist.characMountain}" style="text-align: center">
+                <f:convertNumber minFractionDigits="0" maxFractionDigits="0"/>
+            </h:outputText>
+        </p:column>
+        <p:column headerText="MediumMountain character" styleClass="col-md-1">
+            <h:outputText value="#{cyclist.characMediumMountain}" style="text-align: center">
+                <f:convertNumber minFractionDigits="0" maxFractionDigits="0"/>
+            </h:outputText>
+        </p:column>
+        <p:column headerText="Downhill character" styleClass="col-md-1">
+            <h:outputText value="#{cyclist.charachDownhill}" style="text-align: center">
+                <f:convertNumber minFractionDigits="0" maxFractionDigits="0"/>
+            </h:outputText>
+        </p:column>
+        <p:column headerText="Cobble character" styleClass="col-md-1">
+            <h:outputText value="#{cyclist.charachDownhill}" style="text-align: center">
+                <f:convertNumber minFractionDigits="0" maxFractionDigits="0"/>
+            </h:outputText>
+        </p:column>
+        <p:column headerText="TimeTrial character" styleClass="col-md-1">
+            <h:outputText value="#{cyclist.characTimetrial}" style="text-align: center">
+                <f:convertNumber minFractionDigits="0" maxFractionDigits="0"/>
+            </h:outputText>
+        </p:column>
+        <p:column headerText="Prologue character" styleClass="col-md-1">
+            <h:outputText value="#{cyclist.characPrologue}" style="text-align: center">
+                <f:convertNumber minFractionDigits="0" maxFractionDigits="0"/>
+            </h:outputText>
+        </p:column>
+        <p:column headerText="Sprint character" styleClass="col-md-1">
+            <h:outputText value="#{cyclist.characSprint}" style="text-align: center">
+                <f:convertNumber minFractionDigits="0" maxFractionDigits="0"/>
+            </h:outputText>
+        </p:column>
+        <p:column headerText="Acceleration character" styleClass="col-md-1">
+            <h:outputText value="#{cyclist.characAcceleration}" style="text-align: center">
+                <f:convertNumber minFractionDigits="0" maxFractionDigits="0"/>
+            </h:outputText>
+        </p:column>
+        <p:column headerText="Endurance character" styleClass="col-md-1">
+            <h:outputText value="#{cyclist.characEndurance}" style="text-align: center">
+                <f:convertNumber minFractionDigits="0" maxFractionDigits="0"/>
+            </h:outputText>
+        </p:column>
+        <p:column headerText="Resistance character" styleClass="col-md-1">
+            <h:outputText value="#{cyclist.characResistance}" style="text-align: center">
+                <f:convertNumber minFractionDigits="0" maxFractionDigits="0"/>
+            </h:outputText>
+        </p:column>
+        <p:column headerText="Recuperation character" styleClass="col-md-1">
+            <h:outputText value="#{cyclist.characRecuperation}" style="text-align: center">
+                <f:convertNumber minFractionDigits="0" maxFractionDigits="0"/>
+            </h:outputText>
+        </p:column>
+        <p:column headerText="Hill character" styleClass="col-md-1">
+            <h:outputText value="#{cyclist.characHill}" style="text-align: center">
+                <f:convertNumber minFractionDigits="0" maxFractionDigits="0"/>
+            </h:outputText>
+        </p:column>
+        <p:column headerText="Baroudeur character" styleClass="col-md-1">
+            <h:outputText value="#{cyclist.characBaroudeur}" style="text-align: center">
+                <f:convertNumber minFractionDigits="0" maxFractionDigits="0"/>
+            </h:outputText>
+        </p:column>
+    </p:dataTable>
+
+
+</ui:composition>

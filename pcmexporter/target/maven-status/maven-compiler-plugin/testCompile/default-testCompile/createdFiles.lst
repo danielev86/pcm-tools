@@ -1,0 +1,6 @@
+com\developwithhomer\pcmexporter\service\TeamServiceTest.class
+com\developwithhomer\pcmexporter\service\UserDataServiceTest.class
+com\developwithhomer\pcmexporter\repository\GAMCareeerDataRepositoryTest.class
+com\developwithhomer\pcmexporter\PcmexporterApplicationTests.class
+com\developwithhomer\pcmexporter\repository\CyclistRepositoryTest.class
+com\developwithhomer\pcmexporter\service\CyclistServiceTest.class
