@@ -9,55 +9,94 @@ import java.util.stream.Collectors;
 
 public class TeamService {
 
-    private final TeamDao teamDao;
-
-    public TeamService() {
-        this.teamDao = new TeamDao();
-    }
+    private final TeamDao teamDao = new TeamDao();
 
     public List<TeamBean> getAllTeams() {
-        List<Team> teams = teamDao.findAll();
-        return teams.stream()
-                .map(this::toBean)
-                .collect(Collectors.toList());
+        return teamDao.findAll().stream().map(this::toBean).collect(Collectors.toList());
+    }
+
+    public void saveTeam(TeamBean b) {
+        teamDao.update(toModel(b));
     }
 
     private TeamBean toBean(Team t) {
-        return new TeamBean(
-                t.getIdTeam(),
-                t.getShortName(),
-                t.getName(),
-                t.getJerseyAbbreviation(),
-                t.getAbbreviation(),
-                t.getLicensed(),
-                t.getFkIdCountry(),
-                t.getSuffixEmail(),
-                t.getManagerGeneral(),
-                t.getFkIdDivision(),
-                t.getFkIdNextDivision(),
-                t.getFkIdPrevDivision(),
-                t.getFkIdRace(),
-                t.getPreRaceTeam(),
-                t.getSelected(),
-                t.getConstant(),
-                t.getFkIdCalendar1(),
-                t.getFkIdCalendar2(),
-                t.getFkIdCalendar3(),
-                t.getCurrentEvaluation(),
-                t.getPrevYearEvaluation(),
-                t.getNextYearEvaluation(),
-                t.getSponsorFuture(),
-                t.getDefaultPicking(),
-                t.getTransferEvoBudgetMinYear(),
-                t.getTransferEvoRiderTypeMinYear(),
-                t.getFkIdTeamRiderTypeDistrib(),
-                t.getRaceLikeList(),
-                t.getRaceDislikeList(),
-                t.getBudget(),
-                t.getColor(),
-                t.getRiderTypeImportance(),
-                t.getSecondaryColor(),
-                t.getYearBudgetUpdate()
+        TeamBean b = new TeamBean();
+        b.setIdTeam(t.getIdTeam());
+        b.setShortName(t.getShortName());
+        b.setName(t.getName());
+        b.setJerseyAbbreviation(t.getJerseyAbbreviation());
+        b.setAbbreviation(t.getAbbreviation());
+        b.setLicensed(intOr0(t.getLicensed()));
+        b.setFkIdCountry(intOr0(t.getFkIdCountry()));
+        b.setSuffixeMail(t.getSuffixeMail());
+        b.setManagerGeneral(t.getManagerGeneral());
+        b.setFkIdDivision(intOr0(t.getFkIdDivision()));
+        b.setFkIdNextDivision(intOr0(t.getFkIdNextDivision()));
+        b.setFkIdPrevDivision(intOr0(t.getFkIdPrevDivision()));
+        b.setFkIdRace(intOr0(t.getFkIdRace()));
+        b.setPreraceTeam(intOr0(t.getPreraceTeam()));
+        b.setSelected(intOr0(t.getSelected()));
+        b.setConstant(t.getConstant());
+        b.setFkIdCalendar1(intOr0(t.getFkIdCalendar1()));
+        b.setFkIdCalendar2(intOr0(t.getFkIdCalendar2()));
+        b.setFkIdCalendar3(intOr0(t.getFkIdCalendar3()));
+        b.setCurrentEvaluation(doubleOr0(t.getCurrentEvaluation()));
+        b.setPrevYearEvaluation(doubleOr0(t.getPrevYearEvaluation()));
+        b.setNextYearEvaluation(doubleOr0(t.getNextYearEvaluation()));
+        b.setSponsorFuture(intOr0(t.getSponsorFuture()));
+        b.setDefaultPicking(intOr0(t.getDefaultPicking()));
+        b.setTransferEvoBudgetMinYear(intOr0(t.getTransferEvoBudgetMinYear()));
+        b.setTransferEvoRiderTypeMinYear(intOr0(t.getTransferEvoRiderTypeMinYear()));
+        b.setFkIdTeamRiderTypeDistrib(intOr0(t.getFkIdTeamRiderTypeDistrib()));
+        b.setRaceLike(t.getRaceLike());
+        b.setRaceDislike(t.getRaceDislike());
+        b.setBudget(intOr0(t.getBudget()));
+        b.setColor(t.getColor());
+        b.setRiderTypeImportance(doubleOr0(t.getRiderTypeImportance()));
+        b.setSecondaryColor(t.getSecondaryColor());
+        b.setYearBudgetUpdate(intOr0(t.getYearBudgetUpdate()));
+        return b;
+    }
+
+    private Team toModel(TeamBean b) {
+        return new Team(
+                b.getIdTeam(),
+                b.getShortName(),
+                b.getName(),
+                b.getJerseyAbbreviation(),
+                b.getAbbreviation(),
+                b.getLicensed(),
+                b.getFkIdCountry(),
+                b.getSuffixeMail(),
+                b.getManagerGeneral(),
+                b.getFkIdDivision(),
+                b.getFkIdNextDivision(),
+                b.getFkIdPrevDivision(),
+                b.getFkIdRace(),
+                b.getPreraceTeam(),
+                b.getSelected(),
+                b.getConstant(),
+                b.getFkIdCalendar1(),
+                b.getFkIdCalendar2(),
+                b.getFkIdCalendar3(),
+                b.getCurrentEvaluation(),
+                b.getPrevYearEvaluation(),
+                b.getNextYearEvaluation(),
+                b.getSponsorFuture(),
+                b.getDefaultPicking(),
+                b.getTransferEvoBudgetMinYear(),
+                b.getTransferEvoRiderTypeMinYear(),
+                b.getFkIdTeamRiderTypeDistrib(),
+                b.getRaceLike(),
+                b.getRaceDislike(),
+                b.getBudget(),
+                b.getColor(),
+                b.getRiderTypeImportance(),
+                b.getSecondaryColor(),
+                b.getYearBudgetUpdate()
         );
     }
+
+    private static int intOr0(Integer v) { return v == null ? 0 : v; }
+    private static double doubleOr0(Double v) { return v == null ? 0.0 : v; }
 }

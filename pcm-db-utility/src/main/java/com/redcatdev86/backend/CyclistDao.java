@@ -89,6 +89,61 @@ public class CyclistDao {
         }
     }
 
+    public void updateSkills(int idCyclist,
+                             int plain, int mountain, int mediumMountain, int downhilling,
+                             int cobble, int timetrial, int prologue, int sprint,
+                             int acceleration, int endurance, int resistance, int recuperation,
+                             int hill, int baroudeur) {
+
+        String sql = """
+        UPDATE DYN_cyclist SET
+          charac_i_plain = ?,
+          charac_i_mountain = ?,
+          charac_i_medium_mountain = ?,
+          charac_i_downhilling = ?,
+          charac_i_cobble = ?,
+          charac_i_timetrial = ?,
+          charac_i_prologue = ?,
+          charac_i_sprint = ?,
+          charac_i_acceleration = ?,
+          charac_i_endurance = ?,
+          charac_i_resistance = ?,
+          charac_i_recuperation = ?,
+          charac_i_hill = ?,
+          charac_i_baroudeur = ?
+        WHERE IDcyclist = ?
+        """;
+
+        try (var c = DatabaseManager.getConnection();
+             var ps = c.prepareStatement(sql)) {
+
+            int i = 1;
+            ps.setInt(i++, plain);
+            ps.setInt(i++, mountain);
+            ps.setInt(i++, mediumMountain);
+            ps.setInt(i++, downhilling);
+            ps.setInt(i++, cobble);
+            ps.setInt(i++, timetrial);
+            ps.setInt(i++, prologue);
+            ps.setInt(i++, sprint);
+            ps.setInt(i++, acceleration);
+            ps.setInt(i++, endurance);
+            ps.setInt(i++, resistance);
+            ps.setInt(i++, recuperation);
+            ps.setInt(i++, hill);
+            ps.setInt(i++, baroudeur);
+            ps.setInt(i, idCyclist);
+
+            int updated = ps.executeUpdate();
+            if (updated != 1) {
+                throw new RuntimeException("Update failed: updated rows = " + updated);
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException("CyclistDao.updateSkills failed", e);
+        }
+    }
+
     private static Integer getNullableInt(ResultSet rs, String col) throws Exception {
         int v = rs.getInt(col);
         return rs.wasNull() ? null : v;

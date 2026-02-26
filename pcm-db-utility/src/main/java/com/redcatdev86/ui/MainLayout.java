@@ -32,9 +32,11 @@ public class MainLayout {
         Button btnTeam = new Button("View Team");
         Button btnScout = new Button("View Scout");
         Button btnYoungRider = new Button("View Young Rider");
+        Button btnGamUser = new Button("View Gam User");
+        Button btnCoach = new Button("View Coach");
         Button btnMisc = new Button("Miscellaneous");
 
-        for (Button b : new Button[]{btnCyclist, btnTeam, btnScout, btnYoungRider, btnMisc}) {
+        for (Button b : new Button[]{btnCyclist, btnTeam, btnScout, btnCoach, btnYoungRider, btnGamUser,btnMisc}) {
             b.setMaxWidth(Double.MAX_VALUE);
             b.setPrefHeight(40);
         }
@@ -42,7 +44,9 @@ public class MainLayout {
         btnCyclist.setOnAction(e -> setCenterView(new CyclistView()));
         btnTeam.setOnAction(e -> setCenterView(new TeamView()));
         btnScout.setOnAction(e -> setCenterView(new ScoutView()));
+        btnCoach.setOnAction(e -> setCenterView(new CoachView()));
         btnYoungRider.setOnAction(e -> setCenterView(new YoungRiderView()));
+        btnGamUser.setOnAction(e -> setCenterView(new GamUserView()));
         btnMisc.setOnAction(e -> setCenterView(new MiscView()));
 
         VBox menu = new VBox(10,
@@ -51,7 +55,9 @@ public class MainLayout {
                 btnCyclist,
                 btnTeam,
                 btnScout,
+                btnCoach,
                 btnYoungRider,
+                btnGamUser,
                 btnMisc
         );
 

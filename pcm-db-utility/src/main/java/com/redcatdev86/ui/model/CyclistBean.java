@@ -1,143 +1,210 @@
 package com.redcatdev86.ui.model;
 
+import javafx.beans.property.*;
+
 public class CyclistBean {
 
-    private final int idCyclist;
-    private final String firstName;
-    private final String lastName;
-    private final String firstLastName;
-    private final int fkIdTeam; // coerente con ScoutBean: null -> 0
+    // --- Identity ---
+    private final IntegerProperty idCyclist = new SimpleIntegerProperty();
+    private final StringProperty firstName = new SimpleStringProperty();
+    private final StringProperty lastName = new SimpleStringProperty();
+    private final StringProperty firstLastName = new SimpleStringProperty();
+    private final IntegerProperty fkIdTeam = new SimpleIntegerProperty();
 
-    private final Integer birthdate;
-    private final Double popularity;
-    private final Double popularityMax;
-    private final Double potential;
-    private final Double currentAbility;
+    // --- Main stats ---
+    private final DoubleProperty currentAbility = new SimpleDoubleProperty();
+    private final DoubleProperty potential = new SimpleDoubleProperty();
 
-    private final Integer size;
-    private final Integer weight;
+    // --- Skills (charac + limit) ---
+    private final IntegerProperty charPlain = new SimpleIntegerProperty();
+    private final IntegerProperty limitPlain = new SimpleIntegerProperty();
 
-    private final Integer charPlain; private final Integer limitPlain;
-    private final Integer charMountain; private final Integer limitMountain;
-    private final Integer charMediumMountain; private final Integer limitMediumMountain;
-    private final Integer charDownhilling; private final Integer limitDownhilling;
-    private final Integer charCobble; private final Integer limitCobble;
-    private final Integer charTimeTrial; private final Integer limitTimeTrial;
-    private final Integer charPrologue; private final Integer limitPrologue;
-    private final Integer charSprint; private final Integer limitSprint;
-    private final Integer charAcceleration; private final Integer limitAcceleration;
-    private final Integer charEndurance; private final Integer limitEndurance;
-    private final Integer charResistance; private final Integer limitResistance;
-    private final Integer charRecuperation; private final Integer limitRecuperation;
-    private final Integer charHill; private final Integer limitHill;
-    private final Integer charBaroudeur; private final Integer limitBaroudeur;
+    private final IntegerProperty charMountain = new SimpleIntegerProperty();
+    private final IntegerProperty limitMountain = new SimpleIntegerProperty();
 
-    public CyclistBean(
-            int idCyclist,
-            String firstName,
-            String lastName,
-            String firstLastName,
-            Integer fkIdTeam,
-            Integer birthdate,
-            Double popularity,
-            Double popularityMax,
-            Double potential,
-            Double currentAbility,
-            Integer size,
-            Integer weight,
-            Integer charPlain, Integer limitPlain,
-            Integer charMountain, Integer limitMountain,
-            Integer charMediumMountain, Integer limitMediumMountain,
-            Integer charDownhilling, Integer limitDownhilling,
-            Integer charCobble, Integer limitCobble,
-            Integer charTimeTrial, Integer limitTimeTrial,
-            Integer charPrologue, Integer limitPrologue,
-            Integer charSprint, Integer limitSprint,
-            Integer charAcceleration, Integer limitAcceleration,
-            Integer charEndurance, Integer limitEndurance,
-            Integer charResistance, Integer limitResistance,
-            Integer charRecuperation, Integer limitRecuperation,
-            Integer charHill, Integer limitHill,
-            Integer charBaroudeur, Integer limitBaroudeur
-    ) {
-        this.idCyclist = idCyclist;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.firstLastName = firstLastName;
-        this.fkIdTeam = fkIdTeam == null ? 0 : fkIdTeam;
+    private final IntegerProperty charMediumMountain = new SimpleIntegerProperty();
+    private final IntegerProperty limitMediumMountain = new SimpleIntegerProperty();
 
-        this.birthdate = birthdate;
-        this.popularity = popularity;
-        this.popularityMax = popularityMax;
-        this.potential = potential;
-        this.currentAbility = currentAbility;
+    private final IntegerProperty charDownhilling = new SimpleIntegerProperty();
+    private final IntegerProperty limitDownhilling = new SimpleIntegerProperty();
 
-        this.size = size;
-        this.weight = weight;
+    private final IntegerProperty charCobble = new SimpleIntegerProperty();
+    private final IntegerProperty limitCobble = new SimpleIntegerProperty();
 
-        this.charPlain = charPlain; this.limitPlain = limitPlain;
-        this.charMountain = charMountain; this.limitMountain = limitMountain;
-        this.charMediumMountain = charMediumMountain; this.limitMediumMountain = limitMediumMountain;
-        this.charDownhilling = charDownhilling; this.limitDownhilling = limitDownhilling;
-        this.charCobble = charCobble; this.limitCobble = limitCobble;
-        this.charTimeTrial = charTimeTrial; this.limitTimeTrial = limitTimeTrial;
-        this.charPrologue = charPrologue; this.limitPrologue = limitPrologue;
-        this.charSprint = charSprint; this.limitSprint = limitSprint;
-        this.charAcceleration = charAcceleration; this.limitAcceleration = limitAcceleration;
-        this.charEndurance = charEndurance; this.limitEndurance = limitEndurance;
-        this.charResistance = charResistance; this.limitResistance = limitResistance;
-        this.charRecuperation = charRecuperation; this.limitRecuperation = limitRecuperation;
-        this.charHill = charHill; this.limitHill = limitHill;
-        this.charBaroudeur = charBaroudeur; this.limitBaroudeur = limitBaroudeur;
+    private final IntegerProperty charTimeTrial = new SimpleIntegerProperty();
+    private final IntegerProperty limitTimeTrial = new SimpleIntegerProperty();
+
+    private final IntegerProperty charPrologue = new SimpleIntegerProperty();
+    private final IntegerProperty limitPrologue = new SimpleIntegerProperty();
+
+    private final IntegerProperty charSprint = new SimpleIntegerProperty();
+    private final IntegerProperty limitSprint = new SimpleIntegerProperty();
+
+    private final IntegerProperty charAcceleration = new SimpleIntegerProperty();
+    private final IntegerProperty limitAcceleration = new SimpleIntegerProperty();
+
+    private final IntegerProperty charEndurance = new SimpleIntegerProperty();
+    private final IntegerProperty limitEndurance = new SimpleIntegerProperty();
+
+    private final IntegerProperty charResistance = new SimpleIntegerProperty();
+    private final IntegerProperty limitResistance = new SimpleIntegerProperty();
+
+    private final IntegerProperty charRecuperation = new SimpleIntegerProperty();
+    private final IntegerProperty limitRecuperation = new SimpleIntegerProperty();
+
+    private final IntegerProperty charHill = new SimpleIntegerProperty();
+    private final IntegerProperty limitHill = new SimpleIntegerProperty();
+
+    private final IntegerProperty charBaroudeur = new SimpleIntegerProperty();
+    private final IntegerProperty limitBaroudeur = new SimpleIntegerProperty();
+
+    // --- Constructor ---
+    public CyclistBean() {
     }
 
-    public int getIdCyclist() { return idCyclist; }
-    public String getFirstName() { return firstName; }
-    public String getLastName() { return lastName; }
-    public String getFirstLastName() { return firstLastName; }
-    public int getFkIdTeam() { return fkIdTeam; }
+    // =======================
+    // GETTER + SETTER
+    // =======================
 
-    public Integer getBirthdate() { return birthdate; }
-    public Double getPopularity() { return popularity; }
-    public Double getPopularityMax() { return popularityMax; }
-    public Double getPotential() { return potential; }
-    public Double getCurrentAbility() { return currentAbility; }
+    public int getIdCyclist() { return idCyclist.get(); }
+    public void setIdCyclist(int v) { idCyclist.set(v); }
+    public IntegerProperty idCyclistProperty() { return idCyclist; }
 
-    public Integer getSize() { return size; }
-    public Integer getWeight() { return weight; }
+    public String getFirstName() { return firstName.get(); }
+    public void setFirstName(String v) { firstName.set(v); }
+    public StringProperty firstNameProperty() { return firstName; }
 
-    public Integer getCharPlain() { return charPlain; }
-    public Integer getLimitPlain() { return limitPlain; }
-    public Integer getCharMountain() { return charMountain; }
-    public Integer getLimitMountain() { return limitMountain; }
-    public Integer getCharMediumMountain() { return charMediumMountain; }
-    public Integer getLimitMediumMountain() { return limitMediumMountain; }
-    public Integer getCharDownhilling() { return charDownhilling; }
-    public Integer getLimitDownhilling() { return limitDownhilling; }
-    public Integer getCharCobble() { return charCobble; }
-    public Integer getLimitCobble() { return limitCobble; }
-    public Integer getCharTimeTrial() { return charTimeTrial; }
-    public Integer getLimitTimeTrial() { return limitTimeTrial; }
-    public Integer getCharPrologue() { return charPrologue; }
-    public Integer getLimitPrologue() { return limitPrologue; }
-    public Integer getCharSprint() { return charSprint; }
-    public Integer getLimitSprint() { return limitSprint; }
-    public Integer getCharAcceleration() { return charAcceleration; }
-    public Integer getLimitAcceleration() { return limitAcceleration; }
-    public Integer getCharEndurance() { return charEndurance; }
-    public Integer getLimitEndurance() { return limitEndurance; }
-    public Integer getCharResistance() { return charResistance; }
-    public Integer getLimitResistance() { return limitResistance; }
-    public Integer getCharRecuperation() { return charRecuperation; }
-    public Integer getLimitRecuperation() { return limitRecuperation; }
-    public Integer getCharHill() { return charHill; }
-    public Integer getLimitHill() { return limitHill; }
-    public Integer getCharBaroudeur() { return charBaroudeur; }
-    public Integer getLimitBaroudeur() { return limitBaroudeur; }
+    public String getLastName() { return lastName.get(); }
+    public void setLastName(String v) { lastName.set(v); }
+    public StringProperty lastNameProperty() { return lastName; }
 
-    public String getDisplayName() {
-        String fn = firstName == null ? "" : firstName;
-        String ln = lastName == null ? "" : lastName;
-        return (fn + " " + ln).trim();
-    }
+    public String getFirstLastName() { return firstLastName.get(); }
+    public void setFirstLastName(String v) { firstLastName.set(v); }
+    public StringProperty firstLastNameProperty() { return firstLastName; }
+
+    public int getFkIdTeam() { return fkIdTeam.get(); }
+    public void setFkIdTeam(int v) { fkIdTeam.set(v); }
+    public IntegerProperty fkIdTeamProperty() { return fkIdTeam; }
+
+    public double getCurrentAbility() { return currentAbility.get(); }
+    public void setCurrentAbility(double v) { currentAbility.set(v); }
+    public DoubleProperty currentAbilityProperty() { return currentAbility; }
+
+    public double getPotential() { return potential.get(); }
+    public void setPotential(double v) { potential.set(v); }
+    public DoubleProperty potentialProperty() { return potential; }
+
+    // ---- Skills ----
+
+    public int getCharPlain() { return charPlain.get(); }
+    public void setCharPlain(Integer v) { charPlain.set(v); }
+    public IntegerProperty charPlainProperty() { return charPlain; }
+
+    public int getLimitPlain() { return limitPlain.get(); }
+    public void setLimitPlain(Integer v) { limitPlain.set(v); }
+    public IntegerProperty limitPlainProperty() { return limitPlain; }
+
+    public int getCharMountain() { return charMountain.get(); }
+    public void setCharMountain(Integer v) { charMountain.set(v); }
+    public IntegerProperty charMountainProperty() { return charMountain; }
+
+    public int getLimitMountain() { return limitMountain.get(); }
+    public void setLimitMountain(Integer v) { limitMountain.set(v); }
+    public IntegerProperty limitMountainProperty() { return limitMountain; }
+
+    public int getCharMediumMountain() { return charMediumMountain.get(); }
+    public void setCharMediumMountain(Integer v) { charMediumMountain.set(v); }
+    public IntegerProperty charMediumMountainProperty() { return charMediumMountain; }
+
+    public int getLimitMediumMountain() { return limitMediumMountain.get(); }
+    public void setLimitMediumMountain(Integer v) { limitMediumMountain.set(v); }
+    public IntegerProperty limitMediumMountainProperty() { return limitMediumMountain; }
+
+    public int getCharDownhilling() { return charDownhilling.get(); }
+    public void setCharDownhilling(Integer v) { charDownhilling.set(v); }
+    public IntegerProperty charDownhillingProperty() { return charDownhilling; }
+
+    public int getLimitDownhilling() { return limitDownhilling.get(); }
+    public void setLimitDownhilling(Integer v) { limitDownhilling.set(v); }
+    public IntegerProperty limitDownhillingProperty() { return limitDownhilling; }
+
+    public int getCharCobble() { return charCobble.get(); }
+    public void setCharCobble(Integer v) { charCobble.set(v); }
+    public IntegerProperty charCobbleProperty() { return charCobble; }
+
+    public int getLimitCobble() { return limitCobble.get(); }
+    public void setLimitCobble(Integer v) { limitCobble.set(v); }
+    public IntegerProperty limitCobbleProperty() { return limitCobble; }
+
+    public int getCharTimeTrial() { return charTimeTrial.get(); }
+    public void setCharTimeTrial(Integer v) { charTimeTrial.set(v); }
+    public IntegerProperty charTimeTrialProperty() { return charTimeTrial; }
+
+    public int getLimitTimeTrial() { return limitTimeTrial.get(); }
+    public void setLimitTimeTrial(Integer v) { limitTimeTrial.set(v); }
+    public IntegerProperty limitTimeTrialProperty() { return limitTimeTrial; }
+
+    public int getCharPrologue() { return charPrologue.get(); }
+    public void setCharPrologue(Integer v) { charPrologue.set(v); }
+    public IntegerProperty charPrologueProperty() { return charPrologue; }
+
+    public int getLimitPrologue() { return limitPrologue.get(); }
+    public void setLimitPrologue(Integer v) { limitPrologue.set(v); }
+    public IntegerProperty limitPrologueProperty() { return limitPrologue; }
+
+    public int getCharSprint() { return charSprint.get(); }
+    public void setCharSprint(Integer v) { charSprint.set(v); }
+    public IntegerProperty charSprintProperty() { return charSprint; }
+
+    public int getLimitSprint() { return limitSprint.get(); }
+    public void setLimitSprint(Integer v) { limitSprint.set(v); }
+    public IntegerProperty limitSprintProperty() { return limitSprint; }
+
+    public int getCharAcceleration() { return charAcceleration.get(); }
+    public void setCharAcceleration(Integer v) { charAcceleration.set(v); }
+    public IntegerProperty charAccelerationProperty() { return charAcceleration; }
+
+    public int getLimitAcceleration() { return limitAcceleration.get(); }
+    public void setLimitAcceleration(Integer v) { limitAcceleration.set(v); }
+    public IntegerProperty limitAccelerationProperty() { return limitAcceleration; }
+
+    public int getCharEndurance() { return charEndurance.get(); }
+    public void setCharEndurance(Integer v) { charEndurance.set(v); }
+    public IntegerProperty charEnduranceProperty() { return charEndurance; }
+
+    public int getLimitEndurance() { return limitEndurance.get(); }
+    public void setLimitEndurance(Integer v) { limitEndurance.set(v); }
+    public IntegerProperty limitEnduranceProperty() { return limitEndurance; }
+
+    public int getCharResistance() { return charResistance.get(); }
+    public void setCharResistance(Integer v) { charResistance.set(v); }
+    public IntegerProperty charResistanceProperty() { return charResistance; }
+
+    public int getLimitResistance() { return limitResistance.get(); }
+    public void setLimitResistance(Integer v) { limitResistance.set(v); }
+    public IntegerProperty limitResistanceProperty() { return limitResistance; }
+
+    public int getCharRecuperation() { return charRecuperation.get(); }
+    public void setCharRecuperation(Integer v) { charRecuperation.set(v); }
+    public IntegerProperty charRecuperationProperty() { return charRecuperation; }
+
+    public int getLimitRecuperation() { return limitRecuperation.get(); }
+    public void setLimitRecuperation(Integer v) { limitRecuperation.set(v); }
+    public IntegerProperty limitRecuperationProperty() { return limitRecuperation; }
+
+    public int getCharHill() { return charHill.get(); }
+    public void setCharHill(Integer v) { charHill.set(v); }
+    public IntegerProperty charHillProperty() { return charHill; }
+
+    public int getLimitHill() { return limitHill.get(); }
+    public void setLimitHill(Integer v) { limitHill.set(v); }
+    public IntegerProperty limitHillProperty() { return limitHill; }
+
+    public int getCharBaroudeur() { return charBaroudeur.get(); }
+    public void setCharBaroudeur(Integer v) { charBaroudeur.set(v); }
+    public IntegerProperty charBaroudeurProperty() { return charBaroudeur; }
+
+    public int getLimitBaroudeur() { return limitHill.get(); }
+    public void setLimitBaroudeur(Integer v) { limitHill.set(v); }
+    public IntegerProperty limitBaroudeur() { return limitHill; }
 }

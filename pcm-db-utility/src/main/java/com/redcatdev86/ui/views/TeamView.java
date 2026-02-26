@@ -9,10 +9,11 @@ import javafx.collections.transformation.SortedList;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.StringConverter;
 
 import java.util.List;
 
@@ -27,12 +28,15 @@ public class TeamView implements AppView {
     private final TeamService teamService = new TeamService();
 
     private TextField txtSearch;
+    private ComboBox<String> cmbLicensed;
 
     public TeamView() {
         root.setPadding(new Insets(12));
-        root.setTop(buildTopBar());
+        root.setTop(buildTop());
         root.setCenter(buildTable());
+
         loadData();
+        applyFilters();
     }
 
     @Override
@@ -45,98 +49,235 @@ public class TeamView implements AppView {
         return root;
     }
 
-    private Node buildTopBar() {
+    // =========================
+    // TOP (Title + Filters + Actions)
+    // =========================
+
+    private Node buildTop() {
+
         Label title = new Label(getTitle());
         title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
 
+        // --- Filters ---
         Label lblSearch = new Label("Search:");
         txtSearch = new TextField();
-        txtSearch.setPrefWidth(280);
-        txtSearch.setPromptText("name / shortname / abbreviation...");
-        txtSearch.textProperty().addListener((obs, o, n) -> applyFilter());
+        txtSearch.setPrefWidth(260);
+        txtSearch.setPromptText("name / short name / abbr...");
+        txtSearch.textProperty().addListener((obs, o, n) -> applyFilters());
 
-        Button btnClear = new Button("Clear");
-        btnClear.setOnAction(e -> txtSearch.clear());
+        Label lblLicensed = new Label("Licensed:");
+        cmbLicensed = new ComboBox<>();
+        cmbLicensed.getItems().setAll("All", "Licensed (1)", "Not Licensed (0)");
+        cmbLicensed.setValue("All");
+        cmbLicensed.valueProperty().addListener((obs, o, n) -> applyFilters());
+
+        HBox filters = new HBox(14, lblSearch, txtSearch, lblLicensed, cmbLicensed);
+        filters.setPadding(new Insets(10, 0, 14, 0));
+
+        // --- Actions ---
+        Button btnSave = new Button("Save Selected");
+        btnSave.setOnAction(e -> onSaveSelected());
 
         Button btnReload = new Button("Reload");
         btnReload.setOnAction(e -> loadData());
 
-        HBox row = new HBox(10, lblSearch, txtSearch, btnClear, btnReload);
-        row.setPadding(new Insets(10, 0, 16, 0));
+        // disable save if nothing selected
+        btnSave.disableProperty().bind(
+                table.getSelectionModel().selectedItemProperty().isNull()
+        );
 
-        Separator sep = new Separator();
-        return new VBox(6, title, row, sep);
+        HBox actions = new HBox(10, btnSave, btnReload);
+        actions.setPadding(new Insets(0, 0, 10, 0));
+
+        return new VBox(6, title, filters, actions, new Separator());
     }
 
-    private Node buildTable() {
-        table.setEditable(false);
+    // =========================
+    // TABLE
+    // =========================
 
-        // Helper per creare colonne velocemente
-        table.getColumns().add(col("ID", "idTeam", 80));
-        table.getColumns().add(col("Name", "name", 260));
-        table.getColumns().add(col("Short", "shortName", 160));
-        table.getColumns().add(col("Jersey Abbr", "jerseyAbbreviation", 140));
-        table.getColumns().add(col("Abbr", "abbreviation", 120));
-        table.getColumns().add(col("Licensed", "licensed", 90));
-        table.getColumns().add(col("Country", "fkIdCountry", 90));
-        table.getColumns().add(col("Email Suffix", "suffixEmail", 140));
-        table.getColumns().add(col("Manager", "managerGeneral", 180));
-        table.getColumns().add(col("Division", "fkIdDivision", 90));
-        table.getColumns().add(col("Next Div", "fkIdNextDivision", 90));
-        table.getColumns().add(col("Prev Div", "fkIdPrevDivision", 90));
-        table.getColumns().add(col("Race", "fkIdRace", 80));
-        table.getColumns().add(col("PreRace Team", "preRaceTeam", 110));
-        table.getColumns().add(col("Selected", "selected", 90));
-        table.getColumns().add(col("CONSTANT", "constant", 120));
-        table.getColumns().add(col("Cal1", "fkIdCalendar1", 80));
-        table.getColumns().add(col("Cal2", "fkIdCalendar2", 80));
-        table.getColumns().add(col("Cal3", "fkIdCalendar3", 80));
-        table.getColumns().add(col("Eval Curr", "currentEvaluation", 100));
-        table.getColumns().add(col("Eval Prev", "prevYearEvaluation", 100));
-        table.getColumns().add(col("Eval Next", "nextYearEvaluation", 100));
-        table.getColumns().add(col("Sponsor Fut", "sponsorFuture", 110));
-        table.getColumns().add(col("Default Pick", "defaultPicking", 110));
-        table.getColumns().add(col("TrEvo Bud MinY", "transferEvoBudgetMinYear", 140));
-        table.getColumns().add(col("TrEvo RT MinY", "transferEvoRiderTypeMinYear", 140));
-        table.getColumns().add(col("RT Distrib", "fkIdTeamRiderTypeDistrib", 110));
-        table.getColumns().add(col("Race Like", "raceLikeList", 160));
-        table.getColumns().add(col("Race Dislike", "raceDislikeList", 160));
-        table.getColumns().add(col("Budget", "budget", 100));
-        table.getColumns().add(col("Color", "color", 120));
-        table.getColumns().add(col("RT Importance", "riderTypeImportance", 120));
-        table.getColumns().add(col("2nd Color", "secondaryColor", 120));
-        table.getColumns().add(col("YearBudUpd", "yearBudgetUpdate", 110));
+    private Node buildTable() {
+
+        table.setEditable(true);
+        table.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 
         SortedList<TeamBean> sorted = new SortedList<>(filteredData);
         sorted.comparatorProperty().bind(table.comparatorProperty());
         table.setItems(sorted);
 
-        table.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY); // molte colonne: meglio scroll
+        StringConverter<Integer> safeInt = new StringConverter<>() {
+            @Override public String toString(Integer v) { return v == null ? "" : String.valueOf(v); }
+            @Override public Integer fromString(String s) {
+                if (s == null || s.trim().isEmpty()) return 0;
+                try { return Integer.parseInt(s.trim()); } catch (Exception ex) { return 0; }
+            }
+        };
+
+        StringConverter<Double> safeDouble = new StringConverter<>() {
+            @Override public String toString(Double v) { return v == null ? "" : String.valueOf(v); }
+            @Override public Double fromString(String s) {
+                if (s == null || s.trim().isEmpty()) return 0.0;
+                try { return Double.parseDouble(s.trim()); } catch (Exception ex) { return 0.0; }
+            }
+        };
+
+        table.getColumns().setAll(
+                colInt("ID", "idTeam", 80, false, safeInt),
+
+                colStr("Short Name", "shortName", 160),
+                colStr("Name", "name", 240),
+                colStr("Jersey Abbr", "jerseyAbbreviation", 140),
+                colStr("Abbreviation", "abbreviation", 140),
+
+                colInt("Licensed (0/1)", "licensed", 130, true, safeInt),
+                colInt("Country", "fkIdCountry", 110, true, safeInt),
+                colStr("Suffix Mail", "suffixeMail", 180),
+                colStr("Manager General", "managerGeneral", 200),
+
+                colInt("Division", "fkIdDivision", 110, true, safeInt),
+                colInt("Next Div", "fkIdNextDivision", 110, true, safeInt),
+                colInt("Prev Div", "fkIdPrevDivision", 110, true, safeInt),
+
+                colInt("Race", "fkIdRace", 110, true, safeInt),
+                colInt("PreRace Team", "preraceTeam", 130, true, safeInt),
+
+                colInt("Selected (0/1)", "selected", 130, true, safeInt),
+                colStr("Constant", "constant", 160),
+
+                colInt("Calendar1", "fkIdCalendar1", 120, true, safeInt),
+                colInt("Calendar2", "fkIdCalendar2", 120, true, safeInt),
+                colInt("Calendar3", "fkIdCalendar3", 120, true, safeInt),
+
+                colDouble("Eval Current", "currentEvaluation", 140, true, safeDouble),
+                colDouble("Eval Prev", "prevYearEvaluation", 140, true, safeDouble),
+                colDouble("Eval Next", "nextYearEvaluation", 140, true, safeDouble),
+
+                colInt("Sponsor Future", "sponsorFuture", 140, true, safeInt),
+                colInt("Default Pick (0/1)", "defaultPicking", 160, true, safeInt),
+                colInt("Transf Budget MinY", "transferEvoBudgetMinYear", 170, true, safeInt),
+                colInt("Transf RiderType MinY", "transferEvoRiderTypeMinYear", 190, true, safeInt),
+
+                colInt("RiderType Distrib", "fkIdTeamRiderTypeDistrib", 160, true, safeInt),
+
+                colStr("Race Like", "raceLike", 200),
+                colStr("Race Dislike", "raceDislike", 200),
+
+                colInt("Budget", "budget", 120, true, safeInt),
+                colStr("Color", "color", 140),
+                colDouble("RiderType Importance", "riderTypeImportance", 180, true, safeDouble),
+                colStr("Secondary Color", "secondaryColor", 160),
+                colInt("YearBudgetUpdate", "yearBudgetUpdate", 160, true, safeInt)
+        );
+
         return table;
     }
 
-    private <T> TableColumn<TeamBean, T> col(String title, String property, double width) {
-        TableColumn<TeamBean, T> c = new TableColumn<>(title);
-        c.setCellValueFactory(new PropertyValueFactory<>(property));
-        c.setPrefWidth(width);
-        return c;
+    // =========================
+    // SAVE SELECTED
+    // =========================
+
+    private void onSaveSelected() {
+
+        table.edit(-1, null);
+
+        TeamBean selected = table.getSelectionModel().getSelectedItem();
+        if (selected == null) return;
+
+        String teamLabel = safe(selected.getName());
+        if (teamLabel.isBlank()) teamLabel = safe(selected.getShortName());
+        if (teamLabel.isBlank()) teamLabel = "ID " + selected.getIdTeam();
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Confirm Save");
+        confirm.setHeaderText("Save selected team?");
+        confirm.setContentText("This will update: " + teamLabel);
+
+        ButtonType ok = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        confirm.getButtonTypes().setAll(ok, cancel);
+
+        var res = confirm.showAndWait();
+        if (res.isEmpty() || res.get() != ok) return;
+
+        try {
+            teamService.saveTeam(selected);
+
+            Alert done = new Alert(Alert.AlertType.INFORMATION);
+            done.setTitle("Saved");
+            done.setHeaderText("Saved successfully");
+            done.setContentText("Team updated.");
+            done.showAndWait();
+
+        } catch (Exception ex) {
+            Alert err = new Alert(Alert.AlertType.ERROR);
+            err.setTitle("Error");
+            err.setHeaderText("Save failed");
+            err.setContentText(ex.getMessage());
+            err.showAndWait();
+        }
     }
+
+    // =========================
+    // DATA
+    // =========================
 
     private void loadData() {
         List<TeamBean> teams = teamService.getAllTeams();
         masterData.setAll(teams);
-        applyFilter();
+        applyFilters();
     }
 
-    private void applyFilter() {
-        String q = txtSearch.getText() == null ? "" : txtSearch.getText().trim().toLowerCase();
+    private void applyFilters() {
+
+        String q = txtSearch == null ? "" : txtSearch.getText().trim().toLowerCase();
+        String lic = cmbLicensed == null ? "All" : cmbLicensed.getValue();
 
         filteredData.setPredicate(t -> {
-            if (q.isEmpty()) return true;
-            String name = t.getName() == null ? "" : t.getName().toLowerCase();
-            String shortName = t.getShortName() == null ? "" : t.getShortName().toLowerCase();
-            String abbr = t.getAbbreviation() == null ? "" : t.getAbbreviation().toLowerCase();
-            return name.contains(q) || shortName.contains(q) || abbr.contains(q);
+
+            boolean textOk = q.isEmpty()
+                    || safe(t.getName()).toLowerCase().contains(q)
+                    || safe(t.getShortName()).toLowerCase().contains(q)
+                    || safe(t.getAbbreviation()).toLowerCase().contains(q)
+                    || safe(t.getJerseyAbbreviation()).toLowerCase().contains(q);
+
+            if (!textOk) return false;
+
+            if ("Licensed (1)".equals(lic)) return t.getLicensed() == 1;
+            if ("Not Licensed (0)".equals(lic)) return t.getLicensed() == 0;
+
+            return true;
         });
+    }
+
+    // =========================
+    // COLUMN HELPERS
+    // =========================
+
+    private TableColumn<TeamBean, String> colStr(String title, String prop, double w) {
+        TableColumn<TeamBean, String> c = new TableColumn<>(title);
+        c.setPrefWidth(w);
+        c.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>(prop));
+        c.setCellFactory(TextFieldTableCell.forTableColumn());
+        return c;
+    }
+
+    private TableColumn<TeamBean, Integer> colInt(String title, String prop, double w, boolean editable, StringConverter<Integer> conv) {
+        TableColumn<TeamBean, Integer> c = new TableColumn<>(title);
+        c.setPrefWidth(w);
+        c.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>(prop));
+        if (editable) c.setCellFactory(TextFieldTableCell.forTableColumn(conv));
+        return c;
+    }
+
+    private TableColumn<TeamBean, Double> colDouble(String title, String prop, double w, boolean editable, StringConverter<Double> conv) {
+        TableColumn<TeamBean, Double> c = new TableColumn<>(title);
+        c.setPrefWidth(w);
+        c.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>(prop));
+        if (editable) c.setCellFactory(TextFieldTableCell.forTableColumn(conv));
+        return c;
+    }
+
+    private String safe(String s) {
+        return s == null ? "" : s;
     }
 }
