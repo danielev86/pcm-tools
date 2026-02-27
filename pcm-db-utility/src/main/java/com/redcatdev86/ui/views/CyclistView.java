@@ -17,6 +17,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.StringConverter;
 
 import java.util.HashMap;
 import java.util.List;
@@ -77,6 +78,29 @@ public class CyclistView implements AppView {
         cmbTeam.setPrefWidth(260);
         cmbTeam.setPromptText("All teams");
         cmbTeam.valueProperty().addListener((obs, o, n) -> applyFilters());
+
+        // ✅ FIX: mostra nome team (non package@hash)
+        cmbTeam.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(TeamBean t) {
+                return displayTeamName(t);
+            }
+
+            @Override
+            public TeamBean fromString(String s) {
+                return null; // non serve
+            }
+        });
+
+        // ✅ FIX: anche nella dropdown list
+        cmbTeam.setCellFactory(list -> new ListCell<>() {
+            @Override
+            protected void updateItem(TeamBean item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? null : displayTeamName(item));
+            }
+        });
+
         HBox teamBox = new HBox(8, lblTeam, cmbTeam);
 
         Label lblMinCA = new Label("Min CA:");
@@ -107,6 +131,14 @@ public class CyclistView implements AppView {
 
         Separator sep = new Separator();
         return new VBox(6, title, filtersRow, sep);
+    }
+
+    private String displayTeamName(TeamBean t) {
+        if (t == null) return "";
+        String name = t.getName();
+        if (name == null || name.isBlank()) name = t.getShortName(); // se esiste nel tuo TeamBean
+        if (name == null || name.isBlank()) name = "ID " + t.getIdTeam();
+        return name;
     }
 
     private Node buildTable() {
@@ -190,7 +222,6 @@ public class CyclistView implements AppView {
     }
 
     private void loadData() {
-        // carichiamo tutto "full" in pancia
         List<CyclistBean> cyclists = cyclistService.getAllCyclists();
         masterData.setAll(cyclists);
         applyFilters();
@@ -203,7 +234,11 @@ public class CyclistView implements AppView {
 
         teamNameMap.clear();
         for (TeamBean t : teams) {
-            teamNameMap.put(t.getIdTeam(), t.getName());
+            // in mappa salvo lo stesso "display name" per coerenza
+            String name = t.getName();
+            if (name == null || name.isBlank()) name = t.getShortName();
+            if (name == null) name = "";
+            teamNameMap.put(t.getIdTeam(), name);
         }
     }
 

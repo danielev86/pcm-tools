@@ -1,28 +1,57 @@
 package com.redcatdev86.backend;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.util.Objects;
+import java.util.prefs.Preferences;
 
-public class DatabaseManager {
+public final class DatabaseManager {
 
-    private static final String DB_FOLDER = "data";
-    private static final String DB_NAME = "carriera262.sqlite"; // metti qui il tuo file
-    private static final String URL = "jdbc:sqlite:" + DB_FOLDER + "/" + DB_NAME;
+    private static final String PREF_KEY_DB_PATH = "db.path";
+    private static final Preferences PREFS = Preferences.userNodeForPackage(DatabaseManager.class);
 
-    static {
-        ensureDatabaseFolderExists();
+    private static volatile Path dbPath;
+
+    private DatabaseManager() {}
+
+    /** Imposta il DB corrente e lo salva nelle preferences */
+    public static void setDatabasePath(Path path) {
+        Objects.requireNonNull(path, "path");
+        dbPath = path.toAbsolutePath().normalize();
+        PREFS.put(PREF_KEY_DB_PATH, dbPath.toString());
     }
 
-    private static void ensureDatabaseFolderExists() {
-        File folder = new File(DB_FOLDER);
-        if (!folder.exists()) {
-            folder.mkdirs();
+    /** Prova a caricare il path da preferences (se esiste e il file esiste) */
+    public static boolean loadDatabasePathFromPreferences() {
+        String saved = PREFS.get(PREF_KEY_DB_PATH, null);
+        if (saved == null || saved.isBlank()) return false;
+
+        Path p = Path.of(saved);
+        if (!Files.exists(p)) return false;
+
+        dbPath = p.toAbsolutePath().normalize();
+        return true;
+    }
+
+    public static Path getDatabasePath() {
+        return dbPath;
+    }
+
+    public static boolean isConfigured() {
+        return dbPath != null && Files.exists(dbPath);
+    }
+
+    public static Connection getConnection() {
+        if (!isConfigured()) {
+            throw new IllegalStateException("Database path not configured. Please select/export a database.");
         }
-    }
-
-    public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL);
+        try {
+            String url = "jdbc:sqlite:" + dbPath.toString();
+            return DriverManager.getConnection(url);
+        } catch (Exception e) {
+            throw new RuntimeException("Cannot open SQLite connection for: " + dbPath, e);
+        }
     }
 }

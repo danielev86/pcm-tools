@@ -17,6 +17,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.StringConverter;
 import javafx.util.converter.IntegerStringConverter;
 
 import java.util.*;
@@ -75,7 +76,31 @@ public class ScoutView implements AppView {
         Label lblTeam = new Label("Team:");
         cmbTeam = new ComboBox<>();
         cmbTeam.setPrefWidth(260);
+        cmbTeam.setPromptText("All teams");
         cmbTeam.valueProperty().addListener((obs, o, n) -> applyFilters());
+
+        // ✅ FIX: mostra nome team (non package@hash)
+        cmbTeam.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(TeamBean t) {
+                return displayTeamName(t);
+            }
+
+            @Override
+            public TeamBean fromString(String s) {
+                return null;
+            }
+        });
+
+        // ✅ FIX: anche nella dropdown list
+        cmbTeam.setCellFactory(list -> new ListCell<>() {
+            @Override
+            protected void updateItem(TeamBean item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? null : displayTeamName(item));
+            }
+        });
+
         HBox teamBox = new HBox(8, lblTeam, cmbTeam);
 
         Button btnClear = new Button("Clear");
@@ -96,6 +121,19 @@ public class ScoutView implements AppView {
 
         VBox topContainer = new VBox(6, title, filtersRow, sep);
         return topContainer;
+    }
+
+    private String displayTeamName(TeamBean t) {
+        if (t == null) return "";
+        String name = t.getName();
+        // se hai shortName nel TeamBean, usalo come fallback:
+        try {
+            if (name == null || name.isBlank()) name = t.getShortName();
+        } catch (Exception ignored) {
+            // se non esiste getShortName() non succede nulla
+        }
+        if (name == null || name.isBlank()) name = "ID " + t.getIdTeam();
+        return name;
     }
 
     private Node buildTable() {
@@ -194,7 +232,12 @@ public class ScoutView implements AppView {
 
         teamNameMap.clear();
         for (TeamBean t : teams) {
-            teamNameMap.put(t.getIdTeam(), t.getName());
+            String name = t.getName();
+            try {
+                if (name == null || name.isBlank()) name = t.getShortName();
+            } catch (Exception ignored) {}
+            if (name == null) name = "";
+            teamNameMap.put(t.getIdTeam(), name);
         }
     }
 
