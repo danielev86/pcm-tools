@@ -11,6 +11,8 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Window;
+import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.nio.file.Path;
 
@@ -28,6 +30,10 @@ public class MainLayout {
     private TeamView teamView;
     private ScoutView scoutView;
     private CoachView coachView;
+    private GamUserView gamUserView;
+    private ContractCyclistView contractCyclistView;
+    private ContractCyclistOfferView contractCyclistOfferView;
+    private MiscView miscView;
 
     public MainLayout() {
         root.setTop(buildNavbar());
@@ -93,33 +99,42 @@ public class MainLayout {
 
         VBox sidebar = new VBox(6);
         sidebar.setPadding(new Insets(12));
-        sidebar.setPrefWidth(210);
+        sidebar.setPrefWidth(220);
         sidebar.getStyleClass().add("sidebar");
 
         Label navTitle = new Label("Navigation");
         navTitle.getStyleClass().add("sidebar-title");
 
-        ToggleButton btnCyclists = createNavPill("🚴  Cyclists", this::openCyclist);
-        ToggleButton btnTeams    = createNavPill("📊  Teams", this::openTeam);
-        ToggleButton btnScouts   = createNavPill("👥  Scouts", this::openScout);
-        ToggleButton btnCoaches  = createNavPill("🧭  Coaches", this::openCoach);
+        ToggleButton btnCyclists = createNavPill("Cyclists", FontAwesomeSolid.BICYCLE, this::openCyclist);
+        ToggleButton btnTeams    = createNavPill("Teams", FontAwesomeSolid.CHART_BAR, this::openTeam);
+        ToggleButton btnScouts   = createNavPill("Scouts", FontAwesomeSolid.USER, this::openScout);
+        ToggleButton btnCoaches  = createNavPill("Coaches", FontAwesomeSolid.COMPASS, this::openCoach);
+        ToggleButton btnGamUserView = createNavPill("Gam User View", FontAwesomeSolid.USERS, this::openGamUserView);
+        ToggleButton btnContractCyclist = createNavPill("Contract Cyclist", FontAwesomeSolid.FILE_CONTRACT, this::openContractCyclist);
+        ToggleButton btnContractCyclistOffer = createNavPill("Contract Cyclist", FontAwesomeSolid.SIGN, this::openContractCyclistOffer);
+        ToggleButton btnMisc = createNavPill("Misc", FontAwesomeSolid.BARS, this::openMisc);
 
-        sidebar.getChildren().addAll(navTitle, btnCyclists, btnTeams, btnScouts, btnCoaches);
 
-        // Se vuoi selezione di default (opzionale):
-        // btnCyclists.setSelected(true);
+        sidebar.getChildren().addAll(navTitle, btnCyclists, btnTeams, btnScouts, btnCoaches, btnGamUserView, btnContractCyclist, btnContractCyclistOffer, btnMisc);
 
         return sidebar;
     }
 
-    private ToggleButton createNavPill(String text, Runnable action) {
+    private ToggleButton createNavPill(String text, FontAwesomeSolid icon, Runnable action) {
 
-        ToggleButton btn = new ToggleButton(text);
+        FontIcon iconView = new FontIcon(icon);
+        iconView.setIconSize(16);
+        iconView.getStyleClass().add("nav-icon");
+
+        Label label = new Label(text);
+        HBox content = new HBox(10, iconView, label);
+
+        ToggleButton btn = new ToggleButton();
+        btn.setGraphic(content);
         btn.setToggleGroup(menuGroup);
         btn.setMaxWidth(Double.MAX_VALUE);
         btn.getStyleClass().add("nav-pill");
 
-        // quando seleziono, apro la view
         btn.selectedProperty().addListener((obs, was, is) -> {
             if (is) action.run();
         });
@@ -160,6 +175,30 @@ public class MainLayout {
         contentPane.getChildren().setAll(coachView.getRoot());
     }
 
+    private void openGamUserView() {
+        ensureDbLoaded();
+        if (gamUserView == null) gamUserView = new GamUserView();
+        contentPane.getChildren().setAll(gamUserView.getRoot());
+    }
+
+    private void openContractCyclist() {
+        ensureDbLoaded();
+        if (contractCyclistView == null) contractCyclistView = new ContractCyclistView();
+        contentPane.getChildren().setAll(contractCyclistView.getRoot());
+    }
+
+    private void openContractCyclistOffer() {
+        ensureDbLoaded();
+        if (contractCyclistOfferView == null) contractCyclistOfferView = new ContractCyclistOfferView();
+        contentPane.getChildren().setAll(contractCyclistOfferView.getRoot());
+    }
+
+    private void openMisc() {
+        ensureDbLoaded();
+        if (miscView == null) miscView = new MiscView();
+        contentPane.getChildren().setAll(miscView.getRoot());
+    }
+
     // ================= ACTIONS =================
 
     private void onOpenDb(Window owner) {
@@ -172,7 +211,10 @@ public class MainLayout {
             teamView = null;
             scoutView = null;
             coachView = null;
-
+            gamUserView = null;
+            contractCyclistView = null;
+            contractCyclistOfferView = null;
+            miscView = null;
             contentPane.getChildren().setAll(new Label("Database loaded. Select a page."));
             menuGroup.selectToggle(null);
         }
