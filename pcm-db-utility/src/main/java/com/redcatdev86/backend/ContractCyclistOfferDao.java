@@ -9,7 +9,7 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContractCyclistOfferDao {
+public class ContractCyclistOfferDao extends CommonDao{
 
     public List<ContractCyclistOffer> findAllWithNames() {
 
@@ -91,13 +91,4 @@ public class ContractCyclistOfferDao {
         }
     }
 
-    private static Integer getIntOrNull(ResultSet rs, int idx) throws Exception {
-        int v = rs.getInt(idx);
-        return rs.wasNull() ? null : v;
-    }
-
-    private static void setIntOrNull(PreparedStatement ps, int idx, Integer v) throws Exception {
-        if (v == null) ps.setNull(idx, Types.INTEGER);
-        else ps.setInt(idx, v);
-    }
 }

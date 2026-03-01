@@ -3,7 +3,7 @@ package com.redcatdev86.backend;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
-public class MiscDao {
+public class MiscDao extends CommonDao{
 
     public int resetFatigueForTeam(int idTeam) {
         String sql = """
