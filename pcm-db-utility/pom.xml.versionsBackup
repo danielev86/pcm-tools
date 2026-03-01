@@ -7,7 +7,7 @@
 
   <groupId>com.redcatdev86</groupId>
   <artifactId>pcm-db-utility</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.0.0</version>
   <name>PCM DB Utility</name>
 
   <properties>
