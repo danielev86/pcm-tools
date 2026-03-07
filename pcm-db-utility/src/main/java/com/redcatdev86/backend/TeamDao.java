@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TeamDao {
+public class TeamDao extends CommonDao{
 
     private static final String SQL_FIND_ALL = """
         SELECT
@@ -186,25 +186,5 @@ public class TeamDao {
         } catch (Exception e) {
             throw new RuntimeException("TeamDao.update failed", e);
         }
-    }
-
-    private static Integer getNullableInt(ResultSet rs, String col) throws Exception {
-        int v = rs.getInt(col);
-        return rs.wasNull() ? null : v;
-    }
-
-    private static Double getNullableDouble(ResultSet rs, String col) throws Exception {
-        double v = rs.getDouble(col);
-        return rs.wasNull() ? null : v;
-    }
-
-    private static void setNullableInt(PreparedStatement ps, int idx, Integer v) throws Exception {
-        if (v == null) ps.setNull(idx, java.sql.Types.INTEGER);
-        else ps.setInt(idx, v);
-    }
-
-    private static void setNullableDouble(PreparedStatement ps, int idx, Double v) throws Exception {
-        if (v == null) ps.setNull(idx, java.sql.Types.REAL);
-        else ps.setDouble(idx, v);
     }
 }

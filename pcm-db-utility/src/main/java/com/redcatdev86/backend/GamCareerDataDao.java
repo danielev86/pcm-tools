@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GamCareerDataDao {
+public class GamCareerDataDao extends CommonDao{
 
     public List<GamCareerData> findAll() throws SQLException {
         String sql = """

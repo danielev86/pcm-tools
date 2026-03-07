@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CoachDao {
+public class CoachDao extends CommonDao{
 
     private static final String SQL_FIND_ALL = """
         SELECT
@@ -77,15 +77,5 @@ public class CoachDao {
         } catch (Exception e) {
             throw new RuntimeException("CoachDao.updateEditableFields failed", e);
         }
-    }
-
-    private static Integer getNullableInt(ResultSet rs, String col) throws Exception {
-        int v = rs.getInt(col);
-        return rs.wasNull() ? null : v;
-    }
-
-    private static void setNullableInt(PreparedStatement ps, int idx, Integer v) throws Exception {
-        if (v == null) ps.setNull(idx, java.sql.Types.INTEGER);
-        else ps.setInt(idx, v);
     }
 }

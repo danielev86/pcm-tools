@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CyclistDao {
+public class CyclistDao extends CommonDao{
 
     private static final String SQL_FIND_ALL = """
         SELECT
@@ -144,13 +144,5 @@ public class CyclistDao {
         }
     }
 
-    private static Integer getNullableInt(ResultSet rs, String col) throws Exception {
-        int v = rs.getInt(col);
-        return rs.wasNull() ? null : v;
-    }
 
-    private static Double getNullableDouble(ResultSet rs, String col) throws Exception {
-        double v = rs.getDouble(col);
-        return rs.wasNull() ? null : v;
-    }
 }

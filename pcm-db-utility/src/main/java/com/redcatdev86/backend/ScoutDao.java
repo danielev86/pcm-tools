@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ScoutDao {
+public class ScoutDao  extends CommonDao{
 
     private static final String SQL_FIND_ALL = """
         SELECT
@@ -75,8 +75,4 @@ public class ScoutDao {
         }
     }
 
-    private static Integer getNullableInt(ResultSet rs, String col) throws Exception {
-        int v = rs.getInt(col);
-        return rs.wasNull() ? null : v;
-    }
 }

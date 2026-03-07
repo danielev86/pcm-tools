@@ -9,7 +9,7 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContractCyclistDao {
+public class ContractCyclistDao extends CommonDao{
 
     public List<ContractCyclist> findAllWithNames() {
         // Refuso corretto: dt2 joina su dt2.IDteam
@@ -79,13 +79,5 @@ public class ContractCyclistDao {
         }
     }
 
-    private static Integer getIntOrNull(ResultSet rs, int idx) throws Exception {
-        int v = rs.getInt(idx);
-        return rs.wasNull() ? null : v;
-    }
 
-    private static void setIntOrNull(PreparedStatement ps, int idx, Integer v) throws Exception {
-        if (v == null) ps.setNull(idx, Types.INTEGER);
-        else ps.setInt(idx, v);
-    }
 }
