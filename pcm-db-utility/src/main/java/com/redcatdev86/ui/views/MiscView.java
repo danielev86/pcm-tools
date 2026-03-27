@@ -2,6 +2,7 @@ package com.redcatdev86.ui.views;
 
 import com.redcatdev86.service.MiscService;
 import com.redcatdev86.service.TeamService;
+import com.redcatdev86.ui.model.CyclistMiscBean;
 import com.redcatdev86.ui.model.TeamBean;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -22,17 +23,21 @@ public class MiscView implements AppView {
     private ComboBox<TeamBean> cmbTeam;
     private Button btnSaveFatigue;
     private Button btnSaveTransfer;
+    private ComboBox<CyclistMiscBean> cmbCyclist;
+    private Button btnSaveCyclistFatigue;
 
     public MiscView() {
         root.setPadding(new Insets(12));
         root.getChildren().addAll(
                 buildTitle(),
                 buildFatigueBlock(),
+                buildCyclistFatigueBlock(),
                 new Separator(),
                 buildTransferBlock()
         );
 
         loadTeams();
+        loadCyclists();
     }
 
     @Override
@@ -152,6 +157,80 @@ public class MiscView implements AppView {
         } catch (Exception ex) {
             alert(Alert.AlertType.ERROR, "Error", ex.getMessage());
         }
+    }
+
+    private Node buildCyclistFatigueBlock() {
+
+        Label lbl = new Label("Reset fatigue for cyclist");
+        lbl.setStyle("-fx-font-size: 14px; -fx-font-weight: 600;");
+
+        Label lblCyclist = new Label("Cyclist:");
+
+        cmbCyclist = new ComboBox<>();
+        cmbCyclist.setPrefWidth(420);
+        cmbCyclist.setPromptText("Select a cyclist...");
+
+        cmbCyclist.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(CyclistMiscBean c) {
+                if (c == null) return "";
+                return c.getLastName() + " " + c.getFirstName() + " (ID: " + c.getIdCyclist() + ")";
+            }
+
+            @Override
+            public CyclistMiscBean fromString(String s) {
+                return null;
+            }
+        });
+
+        cmbCyclist.setCellFactory(list -> new ListCell<>() {
+            @Override
+            protected void updateItem(CyclistMiscBean item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? null : cmbCyclist.getConverter().toString(item));
+            }
+        });
+
+        btnSaveCyclistFatigue = new Button("Save fatigue");
+        btnSaveCyclistFatigue.setOnAction(e -> onSaveCyclistFatigue());
+
+        HBox row = new HBox(10, lblCyclist, cmbCyclist, btnSaveCyclistFatigue);
+        row.setPadding(new Insets(8, 0, 0, 0));
+
+        return new VBox(6, lbl, row);
+    }
+
+    private void onSaveCyclistFatigue() {
+
+        CyclistMiscBean c = cmbCyclist.getValue();
+
+        if (c == null) {
+            alert(Alert.AlertType.WARNING, "Missing cyclist", "Select a cyclist first.");
+            return;
+        }
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setHeaderText("Reset fatigue for cyclist?");
+        confirm.setContentText(cmbCyclist.getConverter().toString(c));
+
+        if (confirm.showAndWait().orElse(ButtonType.CANCEL) != ButtonType.OK) return;
+
+        try {
+            int updated = miscService.resetFatigueForCyclist(c.getIdCyclist());
+
+            alert(Alert.AlertType.INFORMATION, "Success",
+                    "Fatigue reset completed.\nRows updated: " + updated);
+
+        } catch (Exception ex) {
+            alert(Alert.AlertType.ERROR, "Error", ex.getMessage());
+        }
+    }
+
+    private void loadCyclists() {
+        List<CyclistMiscBean> cyclists = miscService.getAllCyclistsMisc();
+        cmbCyclist.getItems().setAll(cyclists);
+        cmbCyclist.getSelectionModel().clearSelection();
+        cmbCyclist.setValue(null);
     }
 
     private void alert(Alert.AlertType type, String header, String content) {
