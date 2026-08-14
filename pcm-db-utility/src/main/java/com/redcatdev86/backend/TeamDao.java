@@ -34,7 +34,6 @@ public class TeamDao extends CommonDao{
           value_f_current_evaluation,
           value_f_prevyear_evaluation,
           value_f_nextyear_evaluation,
-          value_i_sponsor_future,
           gene_b_default_picking,
           gene_i_transfer_evo_budget_min_year,
           gene_i_transfer_evo_ridertype_min_year,
@@ -44,8 +43,7 @@ public class TeamDao extends CommonDao{
           value_i_budget,
           gene_sz_color,
           value_f_ridertype_importance,
-          gene_sz_secondary_color,
-          gene_i_YearBudgetUpdate
+          gene_sz_secondary_color
         FROM DYN_team
         ORDER BY IDteam
         """;
@@ -73,7 +71,6 @@ public class TeamDao extends CommonDao{
           value_f_current_evaluation = ?,
           value_f_prevyear_evaluation = ?,
           value_f_nextyear_evaluation = ?,
-          value_i_sponsor_future = ?,
           gene_b_default_picking = ?,
           gene_i_transfer_evo_budget_min_year = ?,
           gene_i_transfer_evo_ridertype_min_year = ?,
@@ -83,8 +80,7 @@ public class TeamDao extends CommonDao{
           value_i_budget = ?,
           gene_sz_color = ?,
           value_f_ridertype_importance = ?,
-          gene_sz_secondary_color = ?,
-          gene_i_YearBudgetUpdate = ?
+          gene_sz_secondary_color = ?
         WHERE IDteam = ?
         """;
 
@@ -118,7 +114,6 @@ public class TeamDao extends CommonDao{
                         getNullableDouble(rs, "value_f_current_evaluation"),
                         getNullableDouble(rs, "value_f_prevyear_evaluation"),
                         getNullableDouble(rs, "value_f_nextyear_evaluation"),
-                        getNullableInt(rs, "value_i_sponsor_future"),
                         getNullableInt(rs, "gene_b_default_picking"),
                         getNullableInt(rs, "gene_i_transfer_evo_budget_min_year"),
                         getNullableInt(rs, "gene_i_transfer_evo_ridertype_min_year"),
@@ -128,8 +123,7 @@ public class TeamDao extends CommonDao{
                         getNullableInt(rs, "value_i_budget"),
                         rs.getString("gene_sz_color"),
                         getNullableDouble(rs, "value_f_ridertype_importance"),
-                        rs.getString("gene_sz_secondary_color"),
-                        getNullableInt(rs, "gene_i_YearBudgetUpdate")
+                        rs.getString("gene_sz_secondary_color")
                 ));
             }
             return out;

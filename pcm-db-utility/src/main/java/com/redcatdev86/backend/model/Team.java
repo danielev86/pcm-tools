@@ -31,7 +31,7 @@ public class Team {
     private final Double prevYearEvaluation;
     private final Double nextYearEvaluation;
 
-    private final Integer sponsorFuture;
+    private Integer sponsorFuture;
 
     private final Integer defaultPicking; // 0/1
     private final Integer transferEvoBudgetMinYear;
@@ -118,6 +118,112 @@ public class Team {
         this.riderTypeImportance = riderTypeImportance;
         this.secondaryColor = secondaryColor;
         this.yearBudgetUpdate = yearBudgetUpdate;
+    }
+
+    public Team(
+            int idTeam,
+            String shortName,
+            String name,
+            String jerseyAbbreviation,
+            String abbreviation,
+            Integer licensed,
+            Integer fkIdCountry,
+            String suffixeMail,
+            String managerGeneral,
+            Integer fkIdDivision,
+            Integer fkIdNextDivision,
+            Integer fkIdPrevDivision,
+            Integer fkIdRace,
+            Integer preraceTeam,
+            Integer selected,
+            String constant,
+            Integer fkIdCalendar1,
+            Integer fkIdCalendar2,
+            Integer fkIdCalendar3,
+            Double currentEvaluation,
+            Double prevYearEvaluation,
+            Double nextYearEvaluation,
+            Integer defaultPicking,
+            Integer transferEvoBudgetMinYear,
+            Integer transferEvoRiderTypeMinYear,
+            Integer fkIdTeamRiderTypeDistrib,
+            String raceLike,
+            String raceDislike,
+            Integer budget,
+            String color,
+            Double riderTypeImportance,
+            String secondaryColor,
+            Integer yearBudgetUpdate
+    ) {
+        this.idTeam = idTeam;
+        this.shortName = shortName;
+        this.name = name;
+        this.jerseyAbbreviation = jerseyAbbreviation;
+        this.abbreviation = abbreviation;
+        this.licensed = licensed;
+        this.fkIdCountry = fkIdCountry;
+        this.suffixeMail = suffixeMail;
+        this.managerGeneral = managerGeneral;
+        this.fkIdDivision = fkIdDivision;
+        this.fkIdNextDivision = fkIdNextDivision;
+        this.fkIdPrevDivision = fkIdPrevDivision;
+        this.fkIdRace = fkIdRace;
+        this.preraceTeam = preraceTeam;
+        this.selected = selected;
+        this.constant = constant;
+        this.fkIdCalendar1 = fkIdCalendar1;
+        this.fkIdCalendar2 = fkIdCalendar2;
+        this.fkIdCalendar3 = fkIdCalendar3;
+        this.currentEvaluation = currentEvaluation;
+        this.prevYearEvaluation = prevYearEvaluation;
+        this.nextYearEvaluation = nextYearEvaluation;
+        this.defaultPicking = defaultPicking;
+        this.transferEvoBudgetMinYear = transferEvoBudgetMinYear;
+        this.transferEvoRiderTypeMinYear = transferEvoRiderTypeMinYear;
+        this.fkIdTeamRiderTypeDistrib = fkIdTeamRiderTypeDistrib;
+        this.raceLike = raceLike;
+        this.raceDislike = raceDislike;
+        this.budget = budget;
+        this.color = color;
+        this.riderTypeImportance = riderTypeImportance;
+        this.secondaryColor = secondaryColor;
+        this.yearBudgetUpdate = yearBudgetUpdate;
+    }
+
+    public Team(int idTeam, String shortName, String name, String jerseyAbbreviation, String abbreviation, Integer licensed, Integer fkIdCountry, String suffixeMail, String managerGeneral, Integer fkIdDivision, Integer fkIdNextDivision, Integer fkIdPrevDivision, Integer fkIdRace, Integer preraceTeam, Integer selected, String constant, Integer fkIdCalendar1, Integer fkIdCalendar2, Integer fkIdCalendar3, Double currentEvaluation, Double prevYearEvaluation, Double nextYearEvaluation, Integer defaultPicking, Integer transferEvoBudgetMinYear, Integer transferEvoRiderTypeMinYear, Integer fkIdTeamRiderTypeDistrib, String raceLike, String raceDislike, Integer budget, String color, Double riderTypeImportance, String secondaryColor) {
+        this.idTeam = idTeam;
+        this.shortName = shortName;
+        this.name = name;
+        this.jerseyAbbreviation = jerseyAbbreviation;
+        this.abbreviation = abbreviation;
+        this.licensed = licensed;
+        this.fkIdCountry = fkIdCountry;
+        this.suffixeMail = suffixeMail;
+        this.managerGeneral = managerGeneral;
+        this.fkIdDivision = fkIdDivision;
+        this.fkIdNextDivision = fkIdNextDivision;
+        this.fkIdPrevDivision = fkIdPrevDivision;
+        this.fkIdRace = fkIdRace;
+        this.preraceTeam = preraceTeam;
+        this.selected = selected;
+        this.constant = constant;
+        this.fkIdCalendar1 = fkIdCalendar1;
+        this.fkIdCalendar2 = fkIdCalendar2;
+        this.fkIdCalendar3 = fkIdCalendar3;
+        this.currentEvaluation = currentEvaluation;
+        this.prevYearEvaluation = prevYearEvaluation;
+        this.nextYearEvaluation = nextYearEvaluation;
+        this.defaultPicking = defaultPicking;
+        this.transferEvoBudgetMinYear = transferEvoBudgetMinYear;
+        this.transferEvoRiderTypeMinYear = transferEvoRiderTypeMinYear;
+        this.fkIdTeamRiderTypeDistrib = fkIdTeamRiderTypeDistrib;
+        this.raceLike = raceLike;
+        this.raceDislike = raceDislike;
+        this.budget = budget;
+        this.color = color;
+        this.riderTypeImportance = riderTypeImportance;
+        this.secondaryColor = secondaryColor;
+        this.yearBudgetUpdate = null;
     }
 
     public int getIdTeam() { return idTeam; }

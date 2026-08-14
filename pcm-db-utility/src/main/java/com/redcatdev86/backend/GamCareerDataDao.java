@@ -13,9 +13,9 @@ public class GamCareerDataDao extends CommonDao{
 
     public List<GamCareerData> findAll() throws SQLException {
         String sql = """
-            SELECT UID, CONSTANT, value
+            SELECT IDcareer_data, CONSTANT, value
             FROM GAM_career_data
-            ORDER BY UID, CONSTANT
+            ORDER BY IDcareer_data, CONSTANT
         """;
 
         try (Connection conn = DatabaseManager.getConnection();
@@ -25,7 +25,7 @@ public class GamCareerDataDao extends CommonDao{
             List<GamCareerData> out = new ArrayList<>();
             while (rs.next()) {
                 out.add(new GamCareerData(
-                        rs.getInt("UID"),
+                        rs.getInt("IDcareer_data"),
                         rs.getString("CONSTANT"),
                         rs.getDouble("value")
                 ));
