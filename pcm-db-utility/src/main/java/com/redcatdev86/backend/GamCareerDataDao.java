@@ -38,7 +38,7 @@ public class GamCareerDataDao extends CommonDao{
         String sql = """
         UPDATE GAM_career_data
         SET value = ?
-        WHERE UID = ? AND CONSTANT = ?
+        WHERE IDcareer_data = ? AND CONSTANT = ?
     """;
 
         try (Connection conn = DatabaseManager.getConnection()) {
