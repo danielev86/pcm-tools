@@ -7,7 +7,7 @@
 
     <groupId>com.redcatdev86</groupId>
     <artifactId>pcm-db-utility</artifactId>
-    <version>1.0.2</version>
+    <version>2.0.0</version>
     <name>PCM DB Utility</name>
 
     <properties>
@@ -29,7 +29,7 @@
 
         <!-- input per jpackage: QUI dentro mettiamo SOLO JAR, tutti in root -->
         <appinput.dir>${project.build.directory}/app-image-input</appinput.dir>
-        <jpackage.app.version>1.0.2</jpackage.app.version>
+        <jpackage.app.version>2.0.0</jpackage.app.version>
     </properties>
 
     <dependencies>
