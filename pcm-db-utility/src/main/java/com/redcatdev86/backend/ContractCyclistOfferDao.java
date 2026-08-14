@@ -19,7 +19,6 @@ public class ContractCyclistOfferDao extends CommonDao{
                    dt.gene_sz_name as actual_team,
                    dcc.finan_i_period_wage,
                    dcc.gene_i_num_years,
-                   dcc.gene_b_final,
                    dcc.gene_i_date_resolve,
                    dcc.iPatienceTries,
                    dcc.iRole
@@ -40,10 +39,9 @@ public class ContractCyclistOfferDao extends CommonDao{
                 x.setActualTeam(rs.getString(3));
                 x.setPeriodWage(getIntOrNull(rs, 4));
                 x.setNumYears(getIntOrNull(rs, 5));
-                x.setFinalFlag(getIntOrNull(rs, 6));
-                x.setDateResolve(getIntOrNull(rs, 7));
-                x.setPatienceTries(getIntOrNull(rs, 8));
-                x.setRole(getIntOrNull(rs, 9));
+                x.setDateResolve(getIntOrNull(rs, 6));
+                x.setPatienceTries(getIntOrNull(rs, 7));
+                x.setRole(getIntOrNull(rs, 8));
                 out.add(x);
             }
             return out;
@@ -66,7 +64,6 @@ public class ContractCyclistOfferDao extends CommonDao{
             UPDATE DYN_contract_cyclist_offer
             SET finan_i_period_wage = ?,
                 gene_i_num_years = ?,
-                gene_b_final = ?,
                 gene_i_date_resolve = ?,
                 iPatienceTries = ?,
                 iRole = ?
@@ -78,11 +75,10 @@ public class ContractCyclistOfferDao extends CommonDao{
 
             setIntOrNull(ps, 1, periodWage);
             setIntOrNull(ps, 2, numYears);
-            setIntOrNull(ps, 3, finalFlag);
-            setIntOrNull(ps, 4, dateResolve);
-            setIntOrNull(ps, 5, patienceTries);
-            setIntOrNull(ps, 6, role);
-            ps.setInt(7, idContractOffer);
+            setIntOrNull(ps, 3, dateResolve);
+            setIntOrNull(ps, 4, patienceTries);
+            setIntOrNull(ps, 5, role);
+            ps.setInt(6, idContractOffer);
 
             ps.executeUpdate();
 
